@@ -6,8 +6,8 @@ from config import config
 from utils import Featurizer
 from utils import ModelAPI
 
-# from flask import Flask, jsonify, request,make_response
-# from flask_cors import CORS
+from flask import Flask, jsonify, request,make_response
+from flask_cors import CORS
 
 
 featurize = Featurizer(config['word2vec'],
@@ -28,9 +28,9 @@ def get_predictions():
         "text_pair": [text1, text2]
     }
     """
-
-    # print(request.json)
-    text_pair = request.json.get('text_pair')
+    sent1 = request.json.get('sentence1')
+    sent2 = request.json.get('sentence2')
+    text_pair = [sent1, sent2]
     pred = model.predict(text_pair=text_pair)
     return jsonify({"is_duplicate": pred})
 
