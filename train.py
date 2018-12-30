@@ -1,11 +1,12 @@
-import tensorflow as  tf
-from model import get_model
 import logging
+import pickle
 
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 from tqdm import tqdm_notebook
 
+from model import get_model
 from utils import (BatchIterator, Featurizer, make_pairs_and_labels_from_df,
                    read_dataframe)
 
@@ -95,6 +96,7 @@ if __name__ == "__main__":
     sess.run(tf.global_variables_initializer())
     logging.info("Session defined!")
 
+    # Use scalar summary instead?
     avg_train_f_score = []
     avg_test_f_score = []
 
@@ -103,7 +105,7 @@ if __name__ == "__main__":
         train_f_score = []
         for i, batch in enumerate(training_batches):
             features, labels, sequence_lengths = batch
-            
+
             # Avoid risking OOM error due to large sequence length
             if max(sequence_lengths) > 128:
                 continue
@@ -120,8 +122,8 @@ if __name__ == "__main__":
                 feed_dict=feed)
 
             f1 = f1_score(labels.argmax(axis=1),
-                        predictions.argmax(axis=1),
-                        average="macro")
+                          predictions.argmax(axis=1),
+                          average="macro")
 
             train_f_score.append(f1)
             logging.info("Train :: epoch: {}, batch : {}, error : {}, f1-score : {}".format(
@@ -139,14 +141,21 @@ if __name__ == "__main__":
             }
             predictions = sess.run(model.logits, feed_dict=feed)
             f1 = f1_score(labels.argmax(axis=1),
-                        predictions.argmax(axis=1), average="macro")
+                          predictions.argmax(axis=1), average="macro")
             test_f_score.append(f1)
-            logging.info("Test :: epoch: {}, batch : {}, f1-score : {}".format(ep, i, np.round(f1, 2)))
+            logging.info(
+                "Test :: epoch: {}, batch : {}, f1-score : {}".format(ep, i, np.round(f1, 2)))
 
         avg_train_f_score.append(np.mean(train_f_score))
         avg_test_f_score.append(np.mean(test_f_score))
 
-        print("Train batched fscore: ",avg_train_f_score[-1], "Test batched fscore: ", avg_test_f_score[-1])
+        print("Train batched fscore: ",
+              avg_train_f_score[-1], "Test batched fscore: ", avg_test_f_score[-1])
 
-        saver.save(sess, "./model.ckpt")
+        saver.save(sess, config['ckpt'])
         logging.info("Model checkpoint saved.")
+
+    # FIXME : use scalar summary instead!!
+    pickle.dump(avg_train_f_score, open("./data/train_avg_f1.pkl", "wb"))
+    pickle.dump(avg_test_f_score, open("./data/test_avg_f1.pkl", "wb"))
+    # FIXME: Use summary!!!!

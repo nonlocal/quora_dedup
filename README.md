@@ -23,7 +23,7 @@ All the parameters needed are in the config.py file
 
 run :
 
-    `python train_word2vec.py`
+    ```python train_word2vec.py```
 
 
 **Part 3 : define model**
@@ -36,5 +36,17 @@ Create training pipelines to train the model. Utilities define in `utils.py` and
 
 To change any h-params of training pipeline, make changes in config.py (instead of using argparse) and just run:
     
-    `python train.py`
+    ```python train.py```
 
+
+**Part 5: deploy the model**
+Deploy the model and test the model by making requests to it.
+See `test_api.ipynb`
+
+
+**Part 6: evaluation**
+Train f1 score (10 epochs) ~ `84%`
+
+Test f1 score (10 epochs) ~ `79%`
+
+```Evaluation.png```
