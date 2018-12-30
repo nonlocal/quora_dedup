@@ -8,7 +8,7 @@ config = {
     "word2vec_workers" : 4,
     "word2vec_sg" : 1,
     "word2vec_iter" : 4,
-    "word2vec" : pickle.load("./data/wordvec.pkl", rb),
+    "word2vec" : pickle.load(open("./data/wordvec.pkl", "rb")),
     "dep_map" : pickle.load(open("./data/dep_map.pkl", 'rb')),
     "tag_map" : pickle.load(open("./data/tag_map.pkl", 'rb')),
     "split_ratio" : 0.8,
