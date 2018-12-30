@@ -63,3 +63,7 @@ Test f1 score (10 epochs) ~ `79%`
 Errors: It will run on the same platform it was trained on!!
 
 1. `tensorflow==1.12.0` causing error when loading!
+
+https://github.com/tensorflow/tensorflow/issues/22346#issuecomment-450526712
+
+There seems some error while restoring the weights, but should not happen if this is done on the same platform with same versions
