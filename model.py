@@ -18,15 +18,14 @@ class Model():
     pass
 
 
-def get_model(n_features, n_classes, n_layers, n_hidden, fc1=False):
+def get_model(n_features, n_classes, n_layers, n_hidden):
     input_placeholder = tf.placeholder(tf.float32, [None, None, n_features])
     output_placeholder = tf.placeholder(tf.float32, [None, n_classes])
     output_keep_prob = tf.placeholder(tf.float32)
     seq_len = tf.placeholder(tf.int32)
     learning_rate = tf.placeholder(tf.float32)
-    if fc1:
-        w_fc1 = tf.Variable(tf.truncated_normal([4*n_hidden, 4*n_hidden]))
-        b_fc1 = tf.Variable(tf.constant(0.1, shape=[4*n_hidden]))
+    W_fc1 = tf.Variable(tf.truncated_normal([4*n_hidden, 4*n_hidden])) 
+    b_fc1 = tf.Variable(tf.constant(0.1, shape=[4*n_hidden]))
     W = tf.Variable(tf.truncated_normal([4*n_hidden, n_classes]))
     b = tf.Variable(tf.constant(0.1, shape=[n_classes]))
 
@@ -48,13 +47,9 @@ def get_model(n_features, n_classes, n_layers, n_hidden, fc1=False):
     indices = tf.stack([batch_range, ind], axis=1)
     last_states = tf.gather_nd(concatenated_outputs, indices)
     conc_last_states = tf.reshape(last_states, [-1, 4*n_hidden])
-    
-    if fc1:
-        fc1_layer = tf.nn.sigmoid(tf.matmul(conc_last_states, W_fc1)+b_fc1)
-    else:
-        fc1_layer = conc_last_states
 
-    logits_ = tf.nn.sigmoid(tf.matmul(fc1_layer, W)+b)
+    fc1 = tf.nn.sigmoid(tf.matmul(conc_last_states, W_fc1)+b_fc1)
+    logits_ = tf.nn.sigmoid(tf.matmul(fc1, W)+b)
     cross_ent = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits_, labels=output_placeholder)
     mean_error = tf.reduce_mean(cross_ent)
     train_op = tf.train.AdamOptimizer(learning_rate).minimize(mean_error)
