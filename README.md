@@ -22,6 +22,7 @@ Train Word2Vec from the data.
 All the parameters needed are in the config.py file
 
 run :
+
     `python train_word2vec.py`
 
 
@@ -30,8 +31,10 @@ run :
 The model/feature extractor that we are going to use here is a BiLSTM followed by FC layer(s) defined in `model.py` file
 
 **Part 4: Train the model**
-Create training pipelines to train the model. Utilities define in `utils.py` and model trained in `train.py`
 
-To change any h-params of train, make changes in config.py (instead of using argparse) and just run
+Create training pipelines to train the model. Utilities define in `utils.py` and model trained in `model.py`
+
+To change any h-params of training pipeline, make changes in config.py (instead of using argparse) and just run:
+    
     `python train.py`
 
