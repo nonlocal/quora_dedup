@@ -1,4 +1,6 @@
-This repo contains code for experiemtns done on Quora Question Classification task.
+**Part 1** :  
+
+This repo contains code for experiments done on Quora Question Classification task.
 
 Given two text questions, the goal is to predict whether the pair intends to ask the same info or not.
 
@@ -12,3 +14,13 @@ To setup the training environment for this repo:
     `source activate quora_dedup`
 
 Now the environment is set up.
+
+
+**Part 2**
+
+Train Word2Vec from the data.
+All the parameters needed are in the config.py file
+
+run :
+    `python train_word2vec.py`
+
