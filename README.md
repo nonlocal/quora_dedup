@@ -29,3 +29,9 @@ run :
 
 The model/feature extractor that we are going to use here is a BiLSTM followed by FC layer(s) defined in `model.py` file
 
+**Part 4: Train the model**
+Create training pipelines to train the model. Utilities define in `utils.py` and model trained in `train.py`
+
+To change any h-params of train, make changes in config.py (instead of using argparse) and just run
+    `python train.py`
+
