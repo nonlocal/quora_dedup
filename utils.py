@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 import en_core_web_sm
 import spacy
+import tensorflow as tf
+
+from model import get_model
 
 
 def read_dataframe(csv_path: str, shuffle: bool = True) -> pd.DataFrame:
@@ -41,7 +44,7 @@ class SentenceIterator(object):
         Sentence Iterator for training gensim w2v
         """
         self.sentences = sentences
-        # Disable heavy pipelines to improve runtime, 
+        # Disable heavy pipelines to improve runtime,
         # All we need here is the tokenized text
         self.nlp = en_core_web_sm.load(disable=['ner', "tagger", "parser"])
 
@@ -52,7 +55,6 @@ class SentenceIterator(object):
             # imp to lower case. Not bothered with NER type of
             #  thing where it can benefit from caps
             yield [x.text.lower() for x in nlp(sent)]
-
 
 
 class Featurizer():
@@ -93,7 +95,7 @@ class Featurizer():
         text_arr = np.zeros(self.w2v_size)
         if txt in self.w2v:
             text_arr = self.w2v[txt]
-        
+
         if self.token_only:
             return text_arr
 
@@ -216,3 +218,44 @@ class BatchIterator():
 def make_pairs_and_labels_from_df(df: pd.DataFrame) -> Tuple:
     return df[df.columns[1:3]].values.tolist(), df['is_duplicate'].tolist()
 
+
+class ModelAPI():
+
+    def __init__(self, featurize, config):
+        tf.reset_default_graph()
+        self.featurize = featurize
+        self.config = config
+        self.n_features = config['n_features']
+        self.graph = tf.Graph()
+        with self.graph.as_default():
+            self.model = get_model(n_features=config["n_features"],
+                                   n_classes=config["n_classes"],
+                                   n_layers=config['n_layers'],
+                                   n_hidden=config['n_hidden'])
+            self.sess = tf.Session()
+            self.saver = tf.train.Saver()
+            self.saver.restore(self.sess, config['ckpt'])
+
+    def _predict(self, features, seq_length):
+        feed = {
+            self.model.input: features,
+            self.model.keep_prob: self.config['output_keep_prob'],
+            self.model.seq_len: seq_length
+        }
+        predictions = self.sess.run(self.model.logits, feed_dict=feed)
+        return bool(np.argmax(predictions[0]))
+
+    def predict(self, text_pair):
+
+        features = []
+        seq_lens = []
+
+        for text in text_pair:
+            arr = self.featurize(text)
+            features.append(arr)
+            seq_length.append(len(arr))
+
+        features = _normalize_features_by_max_len(
+            features, max(seq_lens), self.n_features)
+
+        return self._predict(features, seq_length)

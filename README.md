@@ -6,7 +6,7 @@ Given two text questions, the goal is to predict whether the pair intends to ask
 
 To setup the training environment for this repo:
 1. Install Python 3.6 or any 3+ version compatible with TensorFlow (3.7 is NOT at the moment, checkout tf page). We will assume you have anaconda.
-2. Create a virtual environment name `quora_dedup` with :
+2. Create a virtual environment named `quora_dedup` with :
 
     <!-- # ```conda create -n quora_dedup --file requirements.txt``` -->
     ```conda create -n quora_dedup``` 
@@ -58,3 +58,8 @@ Train f1 score (10 epochs) ~ `84%`
 Test f1 score (10 epochs) ~ `79%`
 
     Evaluation.png
+
+
+Errors: It will run on the same platform it was trained on!!
+
+1. `tensorflow==1.12.0` causing error when loading!
