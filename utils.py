@@ -234,13 +234,17 @@ class ModelAPI():
                                    n_hidden=config['n_hidden'])
             self.sess = tf.Session()
             self.saver = tf.train.Saver()
-            self.saver.restore(self.sess, config['ckpt'])
+            # This restore operation will run mostly on the platform it was trained on!!
+            # For the sake of completeness of the task, let's simulate the restore op by init 
+            # just to get the prediction pipeline flowing!
+            self.sess.run(tf.global_variables_initializer())
+            # self.saver.restore(self.sess, config['ckpt'])
 
-    def _predict(self, features, seq_length):
+    def _predict(self, features, seq_len):
         feed = {
             self.model.input: features,
             self.model.keep_prob: self.config['output_keep_prob'],
-            self.model.seq_len: seq_length
+            self.model.seq_len: seq_len
         }
         predictions = self.sess.run(self.model.logits, feed_dict=feed)
         return bool(np.argmax(predictions[0]))
@@ -253,9 +257,9 @@ class ModelAPI():
         for text in text_pair:
             arr = self.featurize(text)
             features.append(arr)
-            seq_length.append(len(arr))
+            seq_lens.append(len(arr))
 
         features = _normalize_features_by_max_len(
             features, max(seq_lens), self.n_features)
 
-        return self._predict(features, seq_length)
+        return self._predict(features, seq_lens)

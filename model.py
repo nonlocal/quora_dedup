@@ -50,6 +50,7 @@ def get_model(n_features, n_classes, n_layers, n_hidden):
 
     fc1 = tf.nn.sigmoid(tf.matmul(conc_last_states, W_fc1)+b_fc1)
     logits_ = tf.nn.sigmoid(tf.matmul(fc1, W)+b)
+    # This step is redundant!
     logits = tf.nn.softmax(logits_)
     cross_ent = tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits_, labels=output_placeholder)
     #cross_ent = tf.nn.softmax_cross_entropy_with_logits(logits=logits_, labels=output_placeholder)

@@ -24,7 +24,7 @@ config = {
     "learning_rate": 0.001,
     'n_epochs' : 16,
     "check_iterator_batch_sanity":True,
-    "ckpt" : './data/model_196_16.ckpt',
+    "ckpt" : './data/model.ckpt',
 }
 
 
