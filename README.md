@@ -1,4 +1,4 @@
-**Part 1** :  
+**Part 1 : setup the environment**   
 
 This repo contains code for experiments done on Quora Question Classification task.
 
@@ -16,11 +16,16 @@ To setup the training environment for this repo:
 Now the environment is set up.
 
 
-**Part 2**
+**Part 2 : data and word2vec**
 
 Train Word2Vec from the data.
 All the parameters needed are in the config.py file
 
 run :
     `python train_word2vec.py`
+
+
+**Part 3 : define model**
+
+The model/feature extractor that we are going to use here is a BiLSTM followed by FC layer(s) defined in `model.py` file
 
