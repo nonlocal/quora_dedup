@@ -40,11 +40,13 @@ To change any h-params of training pipeline, make changes in config.py (instead 
 
 
 **Part 5: deploy the model**
+
 Deploy the model and test the model by making requests to it.
 See `test_api.ipynb`
 
 
 **Part 6: evaluation**
+
 Train f1 score (10 epochs) ~ `84%`
 
 Test f1 score (10 epochs) ~ `79%`
